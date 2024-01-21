@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from fastapi import FastAPI, Request, Depends, HTTPException, Response, Cookie
 from fastapi.middleware.cors import CORSMiddleware
 
+from .user_routes import user_router
 
 app = FastAPI()
 
@@ -26,4 +27,6 @@ app.add_middleware(
 # route handlers
 @app.get("/")
 def root():
-    return "Hello World"
+    return "Marley says meow"
+
+app.include_router(user_router)

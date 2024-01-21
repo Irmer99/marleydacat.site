@@ -1,12 +1,22 @@
 import './App.css';
-import IMG from './IMG_3777.jpg';
+import Login from './components/Login';
+import Welcome from './components/Welcome';
+
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  //Link
+} from "react-router-dom";
 
 function App() {
   return (
-    <div className='AppMain'>
-      <h1>marleydacat.site</h1>
-      <img src={IMG} alt='marley landing' className='landing'></img>
-    </div>
+    <Router>
+        <Routes>
+          <Route path="/" element={<Welcome />} />
+          <Route path="/login" element={<Login />} />
+        </Routes>
+    </Router>
   );
 }
 
