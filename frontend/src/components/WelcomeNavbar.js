@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-const WelcomeNavbar = () => {
+const WelcomeNavbar = ({newImgCallback}) => {
 
     const nav = useNavigate();
 
@@ -10,7 +10,8 @@ const WelcomeNavbar = () => {
 
     return (
         <div>
-            <button onClick={redirect_to_post}>Make Post</button>
+            <button onClick={newImgCallback}>Fetch a new MarMars pic</button>
+            <button onClick={redirect_to_post}>Post a new MarMars pic</button>
         </div>
     );
 };

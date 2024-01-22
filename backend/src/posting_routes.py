@@ -71,7 +71,7 @@ async def get_random_post(sql_client=Depends(get_db)):
         random_post_row = await cur.fetchone()
     return random_post_row
 
-@posts_router.get("/post/{image_name}")
+@posts_router.get("/post/image/{image_name}")
 async def get_image(image_name:str, rds_client=Depends(get_db)):
     # make sure file name requested is referenced in our listings table
     async with rds_client.cursor() as cur:
