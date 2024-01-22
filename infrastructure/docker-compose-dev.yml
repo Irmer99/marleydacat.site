@@ -23,12 +23,12 @@ services:
     ports:
       - 8000:8000
 
-  frontend: # Server for fully client side ReactJS application
-    build:
-      context: ../frontend
-      dockerfile: ../infrastructure/Dockerfile.frontend
-    ports:
-      - 80:3000
+  # frontend: # Server for fully client side ReactJS application
+  #   build:
+  #     context: ../frontend
+  #     dockerfile: ../infrastructure/Dockerfile.frontend
+  #   ports:
+  #     - 80:3000
 
 volumes:
   db_marley_data:
