@@ -32,7 +32,7 @@ class ImageStorage:
 
 @posts_router.post("/post/create")
 async def create_post(session_id:str=Cookie(None), session_storage=Depends(get_sessions),
-                         rds_client=Depends(get_db),
+                         sql_client=Depends(get_db),
                          title: str = Form(...), description: str = Form(...),
                          file: Optional[UploadFile] = File(None)):
     # We need a valid session_id
@@ -55,13 +55,20 @@ async def create_post(session_id:str=Cookie(None), session_storage=Depends(get_s
     storage = ImageStorage()
     await file.seek(0)
     img_id = await storage.addFile(file, file_type)
-    # store the title, description, price, and a reference to the image in our SQL table
+    # store the title, description, and a reference to the image in our SQL table
+    async with sql_client.cursor() as cur:
+        await cur.execute("""
+            INSERT INTO posts 
+                (poster_username, title, description, image_name)
+                    VALUES
+                (%s, %s, %s, %s)
+            """, (username, title, description, f'{img_id}.{file_type}'))
 
 @posts_router.get("/post/{image_name}")
 async def get_image(image_name:str, rds_client=Depends(get_db)):
     # make sure file name requested is referenced in our listings table
     async with rds_client.cursor() as cur:
-        await cur.execute("SELECT image_name FROM listings WHERE image_name = %s", (image_name))
+        await cur.execute("SELECT image_name FROM posts WHERE image_name = %s", (image_name))
         result = await cur.fetchall()
     if len(result) < 1:
         raise HTTPException(status_code=404)

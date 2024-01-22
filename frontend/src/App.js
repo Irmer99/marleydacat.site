@@ -1,4 +1,5 @@
 import './App.css';
+import DraftPost from './components/DraftPost';
 import Login from './components/Login';
 import Welcome from './components/Welcome';
 
@@ -15,6 +16,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Welcome />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/post" element={<DraftPost />} />
         </Routes>
     </Router>
   );

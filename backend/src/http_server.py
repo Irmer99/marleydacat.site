@@ -7,6 +7,7 @@ from fastapi import FastAPI, Request, Depends, HTTPException, Response, Cookie
 from fastapi.middleware.cors import CORSMiddleware
 
 from .user_routes import user_router
+from .posting_routes import posts_router
 
 app = FastAPI()
 
@@ -14,7 +15,10 @@ app = FastAPI()
 origins = [
     "http://127.0.0.1:3000",
     "http://localhost:3000",
-    "http://192.168.1.167:3000"
+    "http://192.168.1.167:3000",
+    "http://marleydacat.site",
+    "https://marleydacat.site",
+    "http://http://146.190.141.184"
 ]
 app.add_middleware(
     CORSMiddleware,
@@ -30,3 +34,4 @@ def root():
     return "Marley says meow"
 
 app.include_router(user_router)
+app.include_router(posts_router)
