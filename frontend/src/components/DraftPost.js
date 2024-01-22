@@ -1,10 +1,27 @@
 import '../stylesheets/draftpost.css'
 import React, { useState } from 'react';
 
+const PostedModal = ({message, onClose}) => {
+    return (
+      <div className="modal-backdrop">
+        <div className="modal">
+            <p>{message}</p>
+            <button onClick={onClose}>Close</button>
+        </div>
+      </div>
+    );
+  };
+  
+
 const DraftPost = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [img_file, setIMGFile] = useState(null);
+    const [modalMessage, setModalMessage] = useState(null);
+
+    const closeModal = () => {
+        setModalMessage(null);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -22,14 +39,20 @@ const DraftPost = () => {
                 body: formData,
                 credentials: 'include'
             });
-            const result = await response.json();
-            console.log(result);
+            if (response.status === 200)
+                setModalMessage("Success");
+            else if (response.status === 401)
+                setModalMessage("Unauthorized");
+            else
+                setModalMessage("Error")
         } catch (error) {
+            setModalMessage("Error")
             console.error('Error:', error);
         }
     };
 
     return (
+    <>
         <div className="form-container">
         <form onSubmit={handleSubmit} encType="multipart/form-data">
             <input
@@ -51,6 +74,8 @@ const DraftPost = () => {
             <button type="submit">Submit</button>
         </form>
         </div>
+        {modalMessage && <PostedModal message={modalMessage} onClose={closeModal} />}
+    </>
     );
 };
 
