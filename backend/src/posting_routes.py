@@ -63,6 +63,13 @@ async def create_post(session_id:str=Cookie(None), session_storage=Depends(get_s
                     VALUES
                 (%s, %s, %s, %s)
             """, (username, title, description, f'{img_id}.{file_type}'))
+        
+@posts_router.get("/post/random")
+async def get_random_post(sql_client=Depends(get_db)):
+    async with sql_client.cursor() as cur:
+        await cur.execute("SELECT * FROM posts ORDER BY RAND() LIMIT 1")
+        random_post_row = await cur.fetchone()
+    return random_post_row
 
 @posts_router.get("/post/{image_name}")
 async def get_image(image_name:str, rds_client=Depends(get_db)):

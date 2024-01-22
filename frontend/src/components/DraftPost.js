@@ -1,3 +1,4 @@
+import '../stylesheets/draftpost.css'
 import React, { useState } from 'react';
 
 const DraftPost = () => {
