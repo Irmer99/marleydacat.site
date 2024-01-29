@@ -2,6 +2,7 @@ import './App.css';
 import DraftPost from './components/DraftPost';
 import Login from './components/Login';
 import Welcome from './components/Welcome';
+import CatScroll from './components/CatScroll'
 
 import {
   BrowserRouter as Router,
@@ -17,6 +18,7 @@ function App() {
           <Route path="/" element={<Welcome />} />
           <Route path="/login" element={<Login />} />
           <Route path="/post" element={<DraftPost />} />
+          <Route path="/scroll" element={<CatScroll />} />
         </Routes>
     </Router>
   );
