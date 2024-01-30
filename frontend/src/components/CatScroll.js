@@ -1,29 +1,23 @@
-import '../stylesheets/scroll.css';
+import '../stylesheets/scroll.css'
 import React, { useState, useEffect } from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 const CatScroll = () => {
     const [images, setImages] = useState([]);
-    const [loadMore, setLoadMore] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
 
-    // Function to fetch image data from the API
     const fetchImages = async () => {
-        setIsLoading(true);
         try {
             const responses = await Promise.all(
-                Array.from({ length: 3 }, () => fetch(process.env.REACT_APP_BACKEND_HOST+'/post/random'))
+                Array.from({ length: 5 }, () => fetch(process.env.REACT_APP_BACKEND_HOST+'/post/random'))
             );
             const data = await Promise.all(responses.map(res => res.json()));
             return data.map(item => `${process.env.REACT_APP_BACKEND_HOST}/post/image/${item.image_name}`);
         } catch (error) {
-            console.log(images);
             console.error('Error fetching images:', error);
-        } finally {
-            setIsLoading(false);
         }
     };
 
-    // Load initial images
     useEffect(() => {
         fetchImages().then(newImages => {
             if (newImages) {
@@ -32,39 +26,32 @@ const CatScroll = () => {
         });
     }, []);
 
-    // Load more images when 'loadMore' is true
-    useEffect(() => {
-        if (loadMore) {
-            fetchImages().then(moreImages => {
-                if (moreImages) {
-                    setImages(prevImages => [...prevImages, ...moreImages]);
-                }
-                setLoadMore(false);
-            });
-        }
-    }, [loadMore]);
-
-    // Scroll event handler
-    const handleScroll = () => {
-        const secondImage = document.getElementById('image-1');
-        if (secondImage && window.scrollY > secondImage.offsetTop) {
-            setLoadMore(true);
-        }
+    const fetchMoreImages = () => {
+        fetchImages().then(newImages => {
+            if (newImages.length === 0) {
+                setHasMore(false);
+            } else {
+                setImages(prevImages => [...prevImages, ...newImages]);
+            }
+        });
     };
 
-    // Add scroll event listener
-    useEffect(() => {
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
-
     return (
-        <div>
-            {isLoading ? <p>Loading images...</p> : null}
+        <InfiniteScroll
+            dataLength={images.length}
+            next={fetchMoreImages}
+            hasMore={hasMore}
+            loader={<h4>Loading...</h4>}
+            endMessage={
+                <p style={{ textAlign: 'center' }}>
+                    <b>You have seen all the images</b>
+                </p>
+            }
+        >
             {images.map((src, index) => (
-                <img key={index} className='scroll-img' id={`image-${index}`} src={src} alt={`Image ${index}`} />
+                <img key={index} src={src} alt={`${index}`} className="scroll-img" />
             ))}
-        </div>
+        </InfiniteScroll>
     );
 };
 
