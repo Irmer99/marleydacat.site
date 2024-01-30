@@ -1,7 +1,16 @@
-.scroll-img {
-    width: 90vh;
-    height: 90vh;
-    margin: auto;
+.img-card {
+    background-color: #007bff; /* Blue background */
+    border-radius: 10px; /* Rounded edges */
+    padding: 5%; /* Padding around the image */
+    margin: 20px 0; /* Margin for spacing between cards */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Adds a subtle shadow for depth */
     display: block;
-    margin-bottom: 20px;
+    align-items: center;
+}
+
+.scroll-img {
+    width: 100%; /* Adjust as needed, '100%' makes the image fill the card */
+    height: auto; /* Maintains the aspect ratio of the image */
+    display: block; /* Removes bottom space */
+    border-radius: 5px; /* Optional: Rounded edges for the image */
 }

@@ -12,7 +12,10 @@ const CatScroll = () => {
                 Array.from({ length: 5 }, () => fetch(process.env.REACT_APP_BACKEND_HOST+'/post/random'))
             );
             const data = await Promise.all(responses.map(res => res.json()));
-            return data.map(item => `${process.env.REACT_APP_BACKEND_HOST}/post/image/${item.image_name}`);
+            return data.map(item => 
+                ({'image_name': `${process.env.REACT_APP_BACKEND_HOST}/post/image/${item.image_name}`, 
+                'description': item.description})
+            );
         } catch (error) {
             console.error('Error fetching images:', error);
         }
@@ -48,9 +51,14 @@ const CatScroll = () => {
                 </p>
             }
         >
+            
             {images.map((src, index) => (
-                <img key={index} src={src} alt={`${index}`} className="scroll-img" />
-            ))}
+                <div className='img-card'>
+                    <img key={index} src={src.image_name} alt={`${index}`} className="scroll-img" />
+                    <p>{src.description}</p>
+                </div>
+            ))
+            }
         </InfiniteScroll>
     );
 };
