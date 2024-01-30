@@ -15,7 +15,7 @@ const CatScroll = () => {
     const fetchImages = async () => {
         try {
             const responses = await Promise.all(
-                Array.from({ length: 5 }, () => fetch(process.env.REACT_APP_BACKEND_HOST+'/post/random'))
+                Array.from({ length: 3 }, () => fetch(process.env.REACT_APP_BACKEND_HOST+'/post/random'))
             );
             const data = await Promise.all(responses.map(res => res.json()));
             return data.map(item => 
