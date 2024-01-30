@@ -14,3 +14,17 @@
     display: block; /* Removes bottom space */
     border-radius: 5px; /* Optional: Rounded edges for the image */
 }
+
+.content-container {
+    position: relative; /* Relative positioning */
+    padding-bottom: 60px; /* Space for the button, adjust as needed */
+}
+
+.button-container {
+    position: fixed; /* Fixed positioning relative to the viewport */
+    bottom: 0; /* At the bottom of the viewport */
+    width: 100%; /* Full width */
+    text-align: center; /* Center the button */
+    background-color: white; /* Optional: Background color to make it stand out */
+    padding: 10px 0; /* Optional: Some padding around the button */
+}

@@ -1,10 +1,16 @@
 import '../stylesheets/scroll.css'
 import React, { useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { useNavigate } from 'react-router-dom';
 
 const CatScroll = () => {
+    const nav = useNavigate();
     const [images, setImages] = useState([]);
     const [hasMore, setHasMore] = useState(true);
+
+    const onCreatePost = () => {
+        nav('/post');
+    }
 
     const fetchImages = async () => {
         try {
@@ -40,26 +46,31 @@ const CatScroll = () => {
     };
 
     return (
-        <InfiniteScroll
-            dataLength={images.length}
-            next={fetchMoreImages}
-            hasMore={hasMore}
-            loader={<h4>Loading...</h4>}
-            endMessage={
-                <p style={{ textAlign: 'center' }}>
-                    <b>You have seen all the images</b>
-                </p>
-            }
-        >
-            
-            {images.map((src, index) => (
-                <div className='img-card'>
-                    <img key={index} src={src.image_name} alt={`${index}`} className="scroll-img" />
-                    <p>{src.description}</p>
-                </div>
-            ))
-            }
-        </InfiniteScroll>
+        <>
+            <div className="content-container">
+                <InfiniteScroll
+                    dataLength={images.length}
+                    next={fetchMoreImages}
+                    hasMore={hasMore}
+                    loader={<h4>Loading...</h4>}
+                    endMessage={
+                        <p style={{ textAlign: 'center' }}>
+                            <b>You have seen all the images</b>
+                        </p>
+                    }
+                >
+                    {images.map((src, index) => (
+                        <div key={index} className='img-card'>
+                            <img src={src.image_name} alt={`${index}`} className="scroll-img" />
+                            <p>{src.description}</p>
+                        </div>
+                    ))}
+                </InfiniteScroll>
+            </div>
+            <div className="button-container">
+                <button onClick={onCreatePost}>Create Post</button>
+            </div>
+        </>
     );
 };
 
