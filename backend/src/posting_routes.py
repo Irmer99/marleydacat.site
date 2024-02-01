@@ -40,7 +40,10 @@ async def create_post(session_id:str=Cookie(None), session_storage=Depends(get_s
     if not session_id:
         raise HTTPException(status_code=401, detail="Must be logged in to create a listing")
     # TODO: check that the session_id actually exists in our session storage
-    username = session_storage.getUserFromSession(session_id)
+    try:
+        username = session_storage.getUserFromSession(session_id)
+    except:
+        raise HTTPException(status_code=401)
     # enfore a max file size
     if file.size > ImageStorage.MAX_FILE_SIZE:
         raise HTTPException(status_code=422, detail="File too big")

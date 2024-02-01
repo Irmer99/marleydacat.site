@@ -43,7 +43,7 @@ const DraftPost = () => {
                 setModalMessage("Success");
             else if (response.status === 401)
                 setModalMessage("Unauthorized");
-            else if (response.status == 418)
+            else if (response.status === 418)
                 setModalMessage("Not A Cat!");
             else
                 setModalMessage("Error");
