@@ -57,7 +57,7 @@ async def create_post(session_id:str=Cookie(None), session_storage=Depends(get_s
     print(r)
     print(r.json())
     if not r.json()["is_cat"]:
-        raise HTTPException(status_code="418", detail="not a cat")
+        raise HTTPException(status_code=418, detail="not a cat")
     # store the file in our storage bucket
     storage = ImageStorage()
     await file.seek(0)
