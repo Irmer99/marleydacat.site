@@ -23,6 +23,13 @@ services:
     ports:
       - 8000:8000
 
+  vision: # REST server for vision
+    build:
+      context: ../vision
+      dockerfile: ../infrastructure/Dockerfile.vision
+    ports:
+      - 8003:8003
+
   frontend: # Server for fully client side ReactJS application
     build:
       context: ../frontend
