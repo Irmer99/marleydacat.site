@@ -10,7 +10,7 @@ const CatScroll = () => {
 
     const onCreatePost = () => {
         nav('/post');
-    }
+    };
 
     const fetchImages = async () => {
         try {
@@ -69,6 +69,8 @@ const CatScroll = () => {
             </div>
             <div className="button-container">
                 <button onClick={onCreatePost}>Create Post</button>
+                <button>Home</button>
+                <button>Profile</button>
             </div>
         </>
     );

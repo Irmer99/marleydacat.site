@@ -15,7 +15,7 @@ function App() {
   return (
     <Router>
         <Routes>
-          <Route path="/" element={<Welcome />} />
+          <Route path="/" element={<CatScroll />} />
           <Route path="/login" element={<Login />} />
           <Route path="/post" element={<DraftPost />} />
           <Route path="/scroll" element={<CatScroll />} />

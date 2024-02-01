@@ -2,6 +2,7 @@ import os
 import uuid
 import imghdr
 import logging
+import requests
 from pydantic import BaseModel
 from typing import Optional
 from fastapi import APIRouter
@@ -51,6 +52,10 @@ async def create_post(session_id:str=Cookie(None), session_storage=Depends(get_s
     file_type = imghdr.what(None, h=contents)
     if file_type not in ImageStorage.VALID_FILE_EXTENSIONS:
         raise HTTPException(status_code=422, detail="Invalid image file.")
+    # use out vision model to try to make sure the image is a cat
+    r = requests.post('http://vision:8003/cat_classify', files={'image': contents})
+    print(r)
+    print(r.json())
     # store the file in our storage bucket
     storage = ImageStorage()
     await file.seek(0)
