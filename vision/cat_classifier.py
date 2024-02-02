@@ -21,7 +21,7 @@ class DataLoader:
         '''
         positive_examples = [(f'{self.train_data_dir}/cats/{filename}', 1.0) for filename in os.listdir(f'{self.train_data_dir}/cats')]
         negative_examples = [(f'{self.train_data_dir}/squirrels/{filename}', 0.0) for filename in os.listdir(f'{self.train_data_dir}/squirrels')]
-        m = 300 #min(len(positive_examples), len(negative_examples))-1
+        m = min(len(positive_examples), len(negative_examples))-1
         examples = positive_examples[:m] + negative_examples[:m]
         random.shuffle(examples)
         return examples

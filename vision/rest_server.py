@@ -42,7 +42,7 @@ from transformers import ViTImageProcessor
 
 vit_processor = ViTImageProcessor.from_pretrained('google/vit-base-patch16-224')
 cat_logistic_classifier = CatClassifier()
-cat_logistic_classifier.load_state_dict(torch.load('cat-classifier.pt'))
+cat_logistic_classifier.load_state_dict(torch.load('cat-classifier-best.pt'))
 cat_logistic_classifier.eval()
 cat_logistic_classifier.vision_transformer.eval()
 
@@ -50,7 +50,7 @@ cat_logistic_classifier.vision_transformer.eval()
 async def cat_classify(image: UploadFile):
     img_bytes = BytesIO(await image.read())
     with torch.no_grad():
-        img_feats = vit_processor(images=[Image.open(img_bytes)], return_tensors="pt")["pixel_values"]
+        img_feats = vit_processor(images=[Image.open(img_bytes).convert('RGB')], return_tensors="pt")["pixel_values"]
         probability = cat_logistic_classifier.predict(img_feats)
     print(probability)
     prediction = float(probability[0][0])
