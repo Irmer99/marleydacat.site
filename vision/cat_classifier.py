@@ -56,8 +56,8 @@ class CatClassifier(nn.Module):
     vision_transformer = ViTForImageClassification.from_pretrained('google/vit-base-patch16-224')
     def __init__(self):
         super(CatClassifier, self).__init__()
-        self.linear_hidden = nn.Linear(197*768, 128)
-        self.linear_out = nn.Linear(128, 1)
+        self.linear_hidden = nn.Linear(197*768, 1024)
+        self.linear_out = nn.Linear(1024, 1)
 
     def forward(self, image_tensor):
         '''
