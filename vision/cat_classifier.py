@@ -101,8 +101,8 @@ if __name__ == "__main__":
                 print("pred y", torch.sigmoid(pred_y))
                 print("running_loss", running_loss)
                 print(str(point_counter) + "/" + str(total_imgs))
+                break
         print("Epoch loss:", running_loss)
-        torch.save(classifier.state_dict(), f"cat-classifier-{epoch}.pt")
 
     torch.save(classifier.state_dict(), "cat-classifier.pt")
 
