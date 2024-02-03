@@ -42,7 +42,7 @@ from transformers import ViTImageProcessor
 
 vit_processor = ViTImageProcessor.from_pretrained('google/vit-base-patch16-224')
 cat_logistic_classifier = CatClassifier()
-cat_logistic_classifier.load_state_dict(torch.load('cat-classifier-best.pt'))
+cat_logistic_classifier.load_state_dict(torch.load('cat-classifier.pt'))
 cat_logistic_classifier.eval()
 cat_logistic_classifier.vision_transformer.eval()
 
