@@ -12,6 +12,19 @@ const CatScroll = () => {
         nav('/post');
     };
 
+    const onProfile = () => {
+        async function fetchUsername() {
+            const response = await fetch(process.env.REACT_APP_BACKEND_HOST+'/users/whoami', {
+                method: 'GET',
+                credentials: 'include'
+            });
+            const resJson = await response.json();
+            if (resJson !== null)
+                nav('/profile/'+resJson.username);
+        }
+        fetchUsername();
+    };
+
     const fetchImages = async () => {
         try {
             const responses = await Promise.all(
@@ -70,7 +83,7 @@ const CatScroll = () => {
             <div className="button-container">
                 <button onClick={onCreatePost}>Create Post</button>
                 <button>Home</button>
-                <button>Profile</button>
+                <button onClick={onProfile}>Profile</button>
             </div>
         </>
     );
