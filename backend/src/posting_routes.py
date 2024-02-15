@@ -92,3 +92,10 @@ async def get_image(image_name:str, rds_client=Depends(get_db)):
     # get the file from the storage bucket and return it
     file_extension = image_name.split(".")[-1]
     return FileResponse(f'{ImageStorage().storage_root}/{image_name}', media_type=f"image/{file_extension}")
+
+@posts_router.get("/posts/user/{username}")
+async def get_user_posts(username:str, sql_client=Depends(get_db)):
+    async with sql_client.cursor() as cur:
+        await cur.execute("SELECT * from posts WHERE poster_username=%s", (username))
+        result = await cur.fetchall()
+    return result
