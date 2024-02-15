@@ -1,7 +1,7 @@
 import './App.css';
 import DraftPost from './components/DraftPost';
 import Login from './components/Login';
-import Welcome from './components/Welcome';
+import CatProfile from './components/CatProfile';
 import CatScroll from './components/CatScroll'
 
 import {
@@ -19,6 +19,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/post" element={<DraftPost />} />
           <Route path="/scroll" element={<CatScroll />} />
+          <Route path="/profile/:username" element={<CatProfile />} />
         </Routes>
     </Router>
   );
