@@ -1,13 +1,22 @@
+import pymysql
 import requests
 import unittest
+
+from src.dependencies import db_config
 
 class TestUserApis(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.host = 'http://127.0.0.1:8000'
+        cls.host = 'http://127.0.0.1:8080'
         cls.username = "test"
         cls.password = "password"
+        with pymysql.connect(**db_config) as sql_client:
+            with sql_client.cursor() as cur:
+                cur.execute("""
+                    INSERT IGNORE INTO users (username, email, password)
+                        VALUES ('test', 'test@test.test', 'password')
+                """)
 
     def test_user_apis(self):
         with requests.Session() as session:
