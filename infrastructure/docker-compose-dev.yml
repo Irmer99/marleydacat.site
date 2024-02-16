@@ -8,6 +8,8 @@ services:
       dockerfile: Dockerfile.db
     volumes:
       - db_marley_data:/var/lib/mysql
+    ports:
+      - 3306:3306
 
   redis: # Redis Server used for Session Caching
     image: 'redis:alpine'
