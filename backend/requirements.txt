@@ -9,3 +9,4 @@ python-multipart
 pika
 websockets
 redis
+PyNaCl

@@ -3,6 +3,7 @@ import requests
 import unittest
 
 from src.dependencies import db_config
+from src.user_routes import hash_password
 
 class TestUserApis(unittest.TestCase):
 
@@ -15,8 +16,8 @@ class TestUserApis(unittest.TestCase):
             with sql_client.cursor() as cur:
                 cur.execute("""
                     INSERT IGNORE INTO users (username, email, password)
-                        VALUES ('test', 'test@test.test', 'password')
-                """)
+                        VALUES (%s, 'test@test.test', %s)
+                """, (cls.username, hash_password(cls.password)))
 
     def test_user_apis(self):
         with requests.Session() as session:
