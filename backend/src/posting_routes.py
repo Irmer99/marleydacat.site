@@ -55,7 +55,7 @@ async def create_post(session_id:str=Cookie(None), session_storage=Depends(get_s
     file_type = imghdr.what(None, h=contents)
     if file_type not in ImageStorage.VALID_FILE_EXTENSIONS:
         raise HTTPException(status_code=422, detail="Invalid image file.")
-    # use out vision model to try to make sure the image is a cat
+    # use our vision model to try to make sure the image is a cat
     r = requests.post('http://vision:8003/cat_classify', files={'image': contents})
     if r.status_code != 200:
         raise HTTPException(status_code=500, detail="classification error")
