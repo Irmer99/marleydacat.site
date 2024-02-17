@@ -25,6 +25,6 @@
     bottom: 0; /* At the bottom of the viewport */
     width: 100%; /* Full width */
     text-align: center; /* Center the button */
-    background-color: white; /* Optional: Background color to make it stand out */
+    background-color: #BED0ED;
     padding: 10px 0; /* Optional: Some padding around the button */
 }
