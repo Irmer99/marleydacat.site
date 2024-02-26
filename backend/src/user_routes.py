@@ -3,6 +3,7 @@ import uuid
 import json
 import redis
 import logging
+import nacl.hash
 from pydantic import BaseModel
 from typing import Optional
 from fastapi import APIRouter
@@ -31,6 +32,11 @@ def get_sessions():
     session_storage = UserSession()
     yield session_storage
 
+def hash_password(password):
+    SALT = "saltymarley"
+    password + SALT
+    return nacl.hash.sha256(password.encode()).decode()
+
 # User Login Route
 class LoginRequest(BaseModel):
     username: str
@@ -38,11 +44,14 @@ class LoginRequest(BaseModel):
 @user_router.post("/users/login")
 async def user_login(request:LoginRequest, response:Response, rds_client=Depends(get_db), session_storage=Depends(get_sessions)):
     # verify password is correct
+    # hash the input - the data is hashed in the database
+    hashed_password = hash_password(request.password)
+    # compare the hashes
     async with rds_client.cursor() as cur:
         await cur.execute("""
             SELECT * FROM users
             WHERE (username, password) = (%s, %s)
-            """, (request.username, request.password))
+            """, (request.username, hashed_password))
         user_result_row = await cur.fetchone()
     if not user_result_row:
         raise HTTPException(status_code=401)

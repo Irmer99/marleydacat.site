@@ -34,7 +34,6 @@ const LoginCard = () => {
 
     return (
       <>
-        <center><h1>marleydacat.site</h1></center>
         <div className="login-card">
             <h2>Login</h2>
             <form onSubmit={handleSubmit}>

@@ -8,6 +8,8 @@ services:
       dockerfile: Dockerfile.db
     volumes:
       - db_marley_data:/var/lib/mysql
+    ports:
+      - 3306:3306
 
   redis: # Redis Server used for Session Caching
     image: 'redis:alpine'
@@ -30,12 +32,14 @@ services:
   #   ports:
   #     - 8003:8003
 
-  # frontend: # Server for fully client side ReactJS application
-  #   build:
-  #     context: ../frontend
-  #     dockerfile: ../infrastructure/Dockerfile.frontend
-  #   ports:
-  #     - 80:3000
+  frontend: # Server for fully client side ReactJS application
+    build:
+      context: ../frontend
+      dockerfile: ../infrastructure/Dockerfile.frontend
+    volumes:
+      - ../frontend:/app
+    ports:
+      - 80:3000
 
 volumes:
   db_marley_data:

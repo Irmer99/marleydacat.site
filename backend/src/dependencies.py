@@ -10,6 +10,7 @@ db_config = {
     "user": os.environ.get("DB_USER", "root"),
     "password": os.environ.get("DB_PASS", "kkfkffspassss"),
     "db": os.environ.get("DB_NAME", "marley_db"),
+    "port": 3306,
     "autocommit": True
 }
 

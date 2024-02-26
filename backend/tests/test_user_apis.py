@@ -1,13 +1,14 @@
 import requests
 import unittest
 
+from tests.test_helpers import create_test_user
+
 class TestUserApis(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.host = 'http://127.0.0.1:8000'
-        cls.username = "test"
-        cls.password = "password"
+        cls.host = 'http://127.0.0.1:8080'
+        cls.username, cls.password = create_test_user()
 
     def test_user_apis(self):
         with requests.Session() as session:

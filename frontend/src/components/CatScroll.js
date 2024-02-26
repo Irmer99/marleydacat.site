@@ -1,29 +1,10 @@
 import '../stylesheets/scroll.css'
 import React, { useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { useNavigate } from 'react-router-dom';
 
 const CatScroll = () => {
-    const nav = useNavigate();
     const [images, setImages] = useState([]);
     const [hasMore, setHasMore] = useState(true);
-
-    const onCreatePost = () => {
-        nav('/post');
-    };
-
-    const onProfile = () => {
-        async function fetchUsername() {
-            const response = await fetch(process.env.REACT_APP_BACKEND_HOST+'/users/whoami', {
-                method: 'GET',
-                credentials: 'include'
-            });
-            const resJson = await response.json();
-            if (resJson !== null)
-                nav('/profile/'+resJson.username);
-        }
-        fetchUsername();
-    };
 
     const fetchImages = async () => {
         try {
@@ -79,11 +60,6 @@ const CatScroll = () => {
                         </div>
                     ))}
                 </InfiniteScroll>
-            </div>
-            <div className="button-container">
-                <button onClick={onCreatePost}>Create Post</button>
-                <button>Home</button>
-                <button onClick={onProfile}>Profile</button>
             </div>
         </>
     );
