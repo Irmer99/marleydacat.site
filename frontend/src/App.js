@@ -8,8 +8,10 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  useNavigate
+  useNavigate,
 } from "react-router-dom";
+
+import React, { useState, useEffect } from 'react';
 
 async function getUsername() {
   const response = await fetch(`${process.env.REACT_APP_BACKEND_HOST}/users/whoami`, {
@@ -19,9 +21,12 @@ async function getUsername() {
   const resJson = await response.json();
   if (resJson !== null)
     return resJson.username;
+  else
+    return null;
 };
 
 function NavigationButtons() {
+  const [username, setUsername] = useState(null);
   const navigate = useNavigate();
 
   const onProfile = async () => {
@@ -30,11 +35,24 @@ function NavigationButtons() {
       return navigate(`/profile/${username}`);
   };
 
+  useEffect(() => {
+    getUsername().then(result => {
+      setUsername(result);
+    })
+  }, [username]);
+
+  const getProfileButtonText = () => {
+    if (username != null)
+      return "Profile";
+    else
+      return "Login";
+  };
+
   return (
     <div className="button-container">
       <button onClick={() => navigate('/post')}>Create Post</button>
       <button onClick={() => navigate('/')}>Home</button>
-      <button onClick={onProfile}>{foo()}</button>
+      <button onClick={onProfile}>{getProfileButtonText()}</button>
     </div>
   );
 }
