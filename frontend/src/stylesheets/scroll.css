@@ -28,3 +28,7 @@
     background-color: #BED0ED;
     padding: 10px 0; /* Optional: Some padding around the button */
 }
+
+.likes-container {
+    display: flex;
+}

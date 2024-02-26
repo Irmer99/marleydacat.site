@@ -52,3 +52,18 @@ class TestPostApis(unittest.TestCase):
             assert "description" in response_json.keys()
             assert "image_name" in response_json.keys()
             assert "poster_username" in response_json.keys()
+            # Like the random post
+            response = session.post(f'{self.host}/post/like/{response_json["post_id"]}')
+            assert response.status_code == 200
+            # Liking the same post by same user should result in code 409
+            response = session.post(f'{self.host}/post/like/{response_json["post_id"]}')
+            assert response.status_code == 409
+            # Get the number of likes on this post noq
+            response = session.get(f'{self.host}/post/likes/{response_json["post_id"]}')
+            assert response.status_code == 200
+            assert response.json() == 1
+        # make a second user session
+        with requests.Session() as session:
+            # A non-logged in user shouldnt be allowed to like posts
+            response = session.post(f'{self.host}/post/like/{response_json["post_id"]}')
+            assert response.status_code == 401

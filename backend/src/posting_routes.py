@@ -99,3 +99,39 @@ async def get_user_posts(username:str, sql_client=Depends(get_db)):
         await cur.execute("SELECT * from posts WHERE poster_username=%s", (username))
         result = await cur.fetchall()
     return result
+
+@posts_router.get("/post/likes/{post_id}")
+async def get_post_likes(post_id:int, sql_client=Depends(get_db)):
+    async with sql_client.cursor() as cur:
+        await cur.execute("SELECT COUNT(like_id) FROM likes WHERE liked_post_id=%s", (post_id))
+        likes_count = await cur.fetchone()
+    if not likes_count:
+        return 0
+    else:
+        return likes_count["COUNT(like_id)"]
+
+@posts_router.post("/post/like/{post_id}")
+async def like_post(post_id:int,
+                    sql_client=Depends(get_db),
+                    session_id:str=Cookie(None),
+                    session_storage=Depends(get_sessions)):
+    # We need a valid session_id
+    if not session_id:
+        raise HTTPException(status_code=401, detail="Must be logged in to create a listing")
+    # TODO: check that the session_id actually exists in our session storage
+    try:
+        username = session_storage.getUserFromSession(session_id)
+    except:
+        raise HTTPException(status_code=401)
+    async with sql_client.cursor() as cur:
+        # Check if the user already liked the post
+        await cur.execute("SELECT like_id FROM likes WHERE liked_post_id=%s", (post_id))
+        existing_like_row = await cur.fetchall()
+        # Code 409 should signal that the user already liked the post
+        if existing_like_row:
+            raise HTTPException(status_code=409, detail="the user already liked this post")
+        # If the post hasnt already been liked by this user, add the like record to database
+        await cur.execute("""INSERT INTO likes 
+                          (liker_username, liked_post_id)
+                          VALUES (%s, %s)""", (username, post_id))
+        

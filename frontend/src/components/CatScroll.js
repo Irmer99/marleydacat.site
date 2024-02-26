@@ -11,11 +11,19 @@ const CatScroll = () => {
             const responses = await Promise.all(
                 Array.from({ length: 3 }, () => fetch(process.env.REACT_APP_BACKEND_HOST+'/post/random'))
             );
-            const data = await Promise.all(responses.map(res => res.json()));
-            return data.map(item => 
+            let data = await Promise.all(responses.map(res => res.json()));
+            let items = data.map(item => 
                 ({'image_name': `${process.env.REACT_APP_BACKEND_HOST}/post/image/${item.image_name}`, 
-                'description': item.description})
+                'description': item.description, 'post_id': item.post_id})
             );
+
+            const likes_responses = await Promise.all(
+                Array.from(data, (x) => fetch(process.env.REACT_APP_BACKEND_HOST+'/post/likes/'+x.post_id))
+            );
+            const likes_data = await Promise.all(likes_responses.map(res => res.json()));
+            for (let i = 0; i < items.length; i++) 
+                items[i].likes_count = likes_data[i];
+            return items;
         } catch (error) {
             console.error('Error fetching images:', error);
         }
@@ -39,6 +47,27 @@ const CatScroll = () => {
         });
     };
 
+    const likePost = async (post_id) => {
+        try {
+            const response = await fetch(process.env.REACT_APP_BACKEND_HOST+'/post/like/'+post_id, {
+                method: 'POST',
+                credentials: 'include'
+            });
+            if (response.status == 200) {
+                setImages(images =>
+                    images.map(item =>
+                    item.post_id === post_id
+                        ? { ...item, ['likes_count']: item['likes_count'] + 1 }
+                        : item
+                    )
+                );
+            }   
+        } catch (error) {
+            setModalMessage("Error")
+            console.error('Error:', error);
+        }
+    };
+
     return (
         <>
             <div className="content-container">
@@ -56,6 +85,10 @@ const CatScroll = () => {
                     {images.map((src, index) => (
                         <div key={index} className='img-card'>
                             <img src={src.image_name} alt={`${index}`} className="scroll-img" />
+                            <div className='likes-container'>
+                                <p>Likes: {src.likes_count}</p>
+                                <button onClick={() => likePost(src.post_id)}>Like</button>
+                            </div>
                             <p>{src.description}</p>
                         </div>
                     ))}
