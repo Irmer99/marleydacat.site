@@ -25,12 +25,12 @@ services:
     ports:
       - 8080:8080
 
-  # vision: # REST server for vision
-  #   build:
-  #     context: ../vision
-  #     dockerfile: ../infrastructure/Dockerfile.vision
-  #   ports:
-  #     - 8003:8003
+  vision: # REST server for vision
+    build:
+      context: ../vision
+      dockerfile: ../infrastructure/Dockerfile.vision
+    ports:
+      - 8003:8003
 
   frontend: # Server for fully client side ReactJS application
     build:
