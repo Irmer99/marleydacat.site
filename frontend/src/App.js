@@ -11,23 +11,30 @@ import {
   useNavigate
 } from "react-router-dom";
 
+async function getUsername() {
+  const response = await fetch(`${process.env.REACT_APP_BACKEND_HOST}/users/whoami`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+  const resJson = await response.json();
+  if (resJson !== null)
+    return resJson.username;
+};
+
 function NavigationButtons() {
   const navigate = useNavigate();
 
   const onProfile = async () => {
-    const response = await fetch(`${process.env.REACT_APP_BACKEND_HOST}/users/whoami`, {
-      method: 'GET',
-      credentials: 'include',
-    });
-    const resJson = await response.json();
-    if (resJson !== null) navigate(`/profile/${resJson.username}`);
+    let username = await getUsername();
+    if (username)
+      return navigate(`/profile/${username}`);
   };
 
   return (
     <div className="button-container">
       <button onClick={() => navigate('/post')}>Create Post</button>
       <button onClick={() => navigate('/')}>Home</button>
-      <button onClick={onProfile}>Profile</button>
+      <button onClick={onProfile}>{foo()}</button>
     </div>
   );
 }
