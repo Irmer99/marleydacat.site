@@ -39,7 +39,7 @@ function NavigationButtons() {
     getUsername().then(result => {
       setUsername(result);
     })
-  }, [username]);
+  }, []);
 
   const getProfileButtonText = () => {
     if (username != null)
