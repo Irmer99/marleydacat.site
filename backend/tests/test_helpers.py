@@ -19,5 +19,6 @@ def clear_posts():
     with pymysql.connect(**db_config) as sql_client:
         with sql_client.cursor() as cur:
             cur.execute("DELETE FROM posts")
+            cur.execute("DELETE FROM likes")
     for filename in os.listdir('image_storage'):
         os.remove(f'image_storage/{filename}')

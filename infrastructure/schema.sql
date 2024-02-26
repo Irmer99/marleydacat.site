@@ -17,3 +17,10 @@ CREATE TABLE posts (
     description VARCHAR(1024),
     image_name VARCHAR(255)
 );
+
+DROP TABLE IF EXISTS `likes`;
+CREATE TABLE likes (
+    like_id INT PRIMARY KEY AUTO_INCREMENT,
+    liker_username VARCHAR(255),
+    liked_post_id INT
+);
