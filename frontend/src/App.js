@@ -33,6 +33,9 @@ function NavigationButtons() {
     let username = await getUsername();
     if (username)
       return navigate(`/profile/${username}`);
+    else {
+      return navigate('/login/');
+    }
   };
 
   useEffect(() => {
