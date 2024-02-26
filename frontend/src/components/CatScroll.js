@@ -63,7 +63,6 @@ const CatScroll = () => {
                 );
             }   
         } catch (error) {
-            setModalMessage("Error")
             console.error('Error:', error);
         }
     };
