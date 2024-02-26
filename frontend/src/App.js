@@ -22,12 +22,14 @@ function NavigationButtons() {
     const resJson = await response.json();
     if (resJson !== null) navigate(`/profile/${resJson.username}`);
   };
-
+  const onLogin = async () => {
+    
+  }
   return (
     <div className="button-container">
       <button onClick={() => navigate('/post')}>Create Post</button>
       <button onClick={() => navigate('/')}>Home</button>
-      <button onClick={onProfile}>Profile</button>
+      <button onClick={onProfile}>{l}</button>
     </div>
   );
 }
