@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import '../stylesheets/login.css'
 
-const LoginCard = () => {
+const LoginCard = ({setUsernameFunc}) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
@@ -24,6 +24,7 @@ const LoginCard = () => {
         e.preventDefault();
         postLoginRequest(username, password).then(status => {
             if (status === 200) {
+              setUsernameFunc(username);
               navigate("/");
             } else {
               console.log('Login failed with status:', status);
@@ -58,8 +59,8 @@ const LoginCard = () => {
     );
 };
 
-function Login() {
-    return <LoginCard/>;
+function Login({setUsernameFunc}) {
+    return <LoginCard setUsernameFunc={setUsernameFunc}/>;
   }
 
 export default Login;

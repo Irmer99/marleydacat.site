@@ -13,54 +13,50 @@ import {
 
 import React, { useState, useEffect } from 'react';
 
-async function getUsername() {
-  const response = await fetch(`${process.env.REACT_APP_BACKEND_HOST}/users/whoami`, {
-    method: 'GET',
-    credentials: 'include',
-  });
-  const resJson = await response.json();
-  if (resJson !== null)
-    return resJson.username;
-  else
-    return null;
-};
-
-function NavigationButtons() {
-  const [username, setUsername] = useState(null);
-  const navigate = useNavigate();
-
-  const onProfile = async () => {
-    let username = await getUsername();
-    if (username)
-      return navigate(`/profile/${username}`);
-    else
-      return navigate('/login/');
-  };
-
-  useEffect(() => {
-    getUsername().then(result => {
-      setUsername(result);
-    })
-  }, []);
-
-  const getProfileButtonText = () => {
-    if (username != null)
-      return "Profile";
-    else
-      return "Login";
-  };
-
-  return (
-    <div className="button-container">
-      <button onClick={() => navigate('/post')}>Create Post</button>
-      <button onClick={() => navigate('/')}>Home</button>
-      <button onClick={onProfile}>{getProfileButtonText()}</button>
-    </div>
-  );
-}
-
-
 function App() {
+
+  const [username, setUsername] = useState(null);
+
+  async function getUsername() {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_HOST}/users/whoami`, {
+      method: 'GET',
+      credentials: 'include',
+    });
+    const resJson = await response.json();
+    if (resJson !== null)
+      setUsername(resJson.username);
+  };
+  
+  function NavigationButtons() {
+    const navigate = useNavigate();
+  
+    const onProfile = async () => {
+      if (username)
+        return navigate(`/profile/${username}`);
+      else
+        return navigate('/login/');
+    };
+  
+    useEffect(() => {
+      getUsername()
+    }, []);
+  
+    const getProfileButtonText = () => {
+      if (username != null)
+        return "Profile";
+      else
+        return "Login";
+    };
+  
+    return (
+      <div className="button-container">
+        <button onClick={() => navigate('/post')}>Create Post</button>
+        <button onClick={() => navigate('/')}>Home</button>
+        <button onClick={onProfile}>{getProfileButtonText()}</button>
+      </div>
+    );
+  }
+
   return (
     <Router>
         <div className='header'>
@@ -68,7 +64,7 @@ function App() {
         </div>
         <Routes>
           <Route path="/" element={<CatScroll />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login setUsernameFunc={setUsername}/>} />
           <Route path="/post" element={<DraftPost />} />
           <Route path="/scroll" element={<CatScroll />} />
           <Route path="/profile/:username" element={<CatProfile />} />
