@@ -17,11 +17,12 @@
   display: inline-block;
   cursor: pointer;
   text-align: center;
+  padding-inline: 4vh;
 }
 
 .button-image {
   width: auto;
-  height: 8vh;
+  height: 5vh;
 }
 
 .button-text {
