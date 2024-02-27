@@ -13,6 +13,10 @@ import {
 
 import React, { useState, useEffect } from 'react';
 
+import loginCat from './images/BE_Cat72.png'
+import loginCatHome from './images/BE_Cat72_home.png'
+import loginCatCreate from './images/BE_Cat72_create.png'
+
 function App() {
 
   const [username, setUsername] = useState(null);
@@ -47,12 +51,19 @@ function App() {
       else
         return "Login";
     };
+
+    const ImageButton = ({ onClick, imageSrc, alt = 'Click me', buttonText = 'Button Text' }) => (
+      <span className="image-button" onClick={onClick} role="button" tabIndex={0}>
+        <img src={imageSrc} alt={alt} className="button-image"/>
+        <div className="button-text">{buttonText}</div>
+      </span>
+    );
   
     return (
       <div className="button-container">
-        <button onClick={() => navigate('/post')}>Create Post</button>
-        <button onClick={() => navigate('/')}>Home</button>
-        <button onClick={onProfile}>{getProfileButtonText()}</button>
+        <ImageButton onClick={() => navigate('/post')} imageSrc={loginCatCreate} buttonText='Create Post' alt="Custom Image Button" />
+        <ImageButton onClick={() => navigate('/')} imageSrc={loginCatHome} buttonText='Home' alt="Custom Image Button" />
+        <ImageButton onClick={onProfile} imageSrc={loginCat} buttonText={getProfileButtonText()} alt="Custom Image Button" />
       </div>
     );
   }

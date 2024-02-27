@@ -12,3 +12,18 @@
   justify-content: center;
   background-color: #BED0ED;
 }
+
+.image-button {
+  display: inline-block;
+  cursor: pointer;
+  text-align: center;
+}
+
+.button-image {
+  width: auto;
+  height: 8vh;
+}
+
+.button-text {
+  margin-top: 8px;
+}
