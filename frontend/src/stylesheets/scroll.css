@@ -29,6 +29,16 @@
     padding: 10px 0; /* Optional: Some padding around the button */
 }
 
+.image-details-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
 .likes-container {
     display: flex;
+}
+
+.poster-username {
+    padding-right: 70%;
 }

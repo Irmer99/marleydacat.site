@@ -1,10 +1,12 @@
 import '../stylesheets/scroll.css'
 import React, { useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { useNavigate } from 'react-router-dom';
 
 const CatScroll = () => {
     const [images, setImages] = useState([]);
     const [hasMore, setHasMore] = useState(true);
+    const navigate = useNavigate();
 
     const fetchImages = async () => {
         try {
@@ -14,7 +16,7 @@ const CatScroll = () => {
             let data = await Promise.all(responses.map(res => res.json()));
             let items = data.map(item => 
                 ({'image_name': `${process.env.REACT_APP_BACKEND_HOST}/post/image/${item.image_name}`, 
-                'description': item.description, 'post_id': item.post_id})
+                'description': item.description, 'post_id': item.post_id, 'poster_username': item.poster_username})
             );
 
             const likes_responses = await Promise.all(
@@ -84,9 +86,12 @@ const CatScroll = () => {
                     {images.map((src, index) => (
                         <div key={index} className='img-card'>
                             <img src={src.image_name} alt={`${index}`} className="scroll-img" />
-                            <div className='likes-container'>
-                                <p>Likes: {src.likes_count}</p>
-                                <button onClick={() => likePost(src.post_id)}>Like</button>
+                            <div className='image-details-container'>
+                                <p className='poster-username' onClick={() => navigate('/profile/'+src.poster_username)}>{src.poster_username}</p>
+                                <div className='likes-container'>
+                                    <p>Likes: {src.likes_count}</p>
+                                    <button onClick={() => likePost(src.post_id)}>Like</button>
+                                </div>
                             </div>
                             <p>{src.description}</p>
                         </div>
