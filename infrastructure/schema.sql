@@ -15,12 +15,15 @@ CREATE TABLE posts (
     poster_username VARCHAR(255),
     title VARCHAR(255),
     description VARCHAR(1024),
-    image_name VARCHAR(255)
+    image_name VARCHAR(255),
+    FOREIGN KEY (poster_username) REFERENCES users(username) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 DROP TABLE IF EXISTS `likes`;
 CREATE TABLE likes (
     like_id INT PRIMARY KEY AUTO_INCREMENT,
     liker_username VARCHAR(255),
-    liked_post_id INT
+    liked_post_id INT,
+    FOREIGN KEY (liker_username) REFERENCES users(username) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY (liked_post_id) REFERENCES posts(post_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
