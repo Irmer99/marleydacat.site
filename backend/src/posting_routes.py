@@ -125,7 +125,7 @@ async def like_post(post_id:int,
         raise HTTPException(status_code=401)
     async with sql_client.cursor() as cur:
         # Check if the user already liked the post
-        await cur.execute("SELECT like_id FROM likes WHERE liked_post_id=%s", (post_id))
+        await cur.execute("SELECT like_id FROM likes WHERE liked_post_id=%s AND liker_username=%s", (post_id, username))
         existing_like_row = await cur.fetchall()
         # Code 409 should signal that the user already liked the post
         if existing_like_row:
