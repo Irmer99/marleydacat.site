@@ -55,7 +55,7 @@ const CatScroll = () => {
                 method: 'POST',
                 credentials: 'include'
             });
-            if (response.status == 200) {
+            if (response.status === 200) {
                 setImages(images =>
                     images.map(item =>
                     item.post_id === post_id

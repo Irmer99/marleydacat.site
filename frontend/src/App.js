@@ -61,9 +61,9 @@ function App() {
   
     return (
       <div className="button-container">
-        <ImageButton onClick={() => navigate('/post')} imageSrc={loginCatCreate} buttonText='Create Post' alt="Custom Image Button" />
-        <ImageButton onClick={() => navigate('/')} imageSrc={loginCatHome} buttonText='Home' alt="Custom Image Button" />
-        <ImageButton onClick={onProfile} imageSrc={loginCat} buttonText={getProfileButtonText()} alt="Custom Image Button" />
+        <ImageButton onClick={() => navigate('/post')} imageSrc={loginCatCreate} buttonText='Post' alt="Image Button" />
+        <ImageButton onClick={() => navigate('/')} imageSrc={loginCatHome} buttonText='Home' alt="Image Button" />
+        <ImageButton onClick={onProfile} imageSrc={loginCat} buttonText={getProfileButtonText()} alt="Image Button" />
       </div>
     );
   }

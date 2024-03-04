@@ -13,18 +13,23 @@
   background-color: #BED0ED;
 }
 
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 10vh;
+}
+
 .image-button {
-  display: inline-block;
+  height: 5vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
-  text-align: center;
-  padding-inline: 4vh;
 }
 
 .button-image {
-  width: auto;
-  height: 5vh;
-}
-
-.button-text {
-  margin-top: 8px;
+  max-height: 100%;
+  object-fit: cover;
 }
