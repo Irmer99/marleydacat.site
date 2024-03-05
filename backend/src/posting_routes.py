@@ -33,10 +33,10 @@ class ImageStorage:
             local_file.write(await file.read())
         return img_id
 
-    def compress_image(image_path, max_size=(480, 480)):
+    def compress_image(image_path, max_size=480):
         with Image.open(image_path) as img:
             img = ImageOps.exif_transpose(img)
-            img.thumbnail(max_size)
+            img.thumbnail((max_size,max_size))
             # Convert the PIL image to bytes in the appropriate format
             img_byte_arr = io.BytesIO()
             format = img.format if img.format is not None else 'JPEG'  # Default to JPEG if format cannot be detected
@@ -96,7 +96,8 @@ async def get_random_post(sql_client=Depends(get_db)):
     return random_post_row
 
 @posts_router.get("/post/image/{image_name}")
-async def get_image(image_name:str, rds_client=Depends(get_db)):
+async def get_image(image_name:str, quality:str=None, rds_client=Depends(get_db)):
+    quality_map = {"low": 240, "mid": 480, "high": 720, None: 720}
     # make sure file name requested is referenced in our listings table
     async with rds_client.cursor() as cur:
         await cur.execute("SELECT image_name FROM posts WHERE image_name = %s", (image_name))
@@ -104,7 +105,7 @@ async def get_image(image_name:str, rds_client=Depends(get_db)):
     if len(result) < 1:
         raise HTTPException(status_code=404)
     # get the file from the storage bucket and return it
-    resized_image_bytes_io, file_extension = ImageStorage.compress_image(f'{ImageStorage().storage_root}/{image_name}')
+    resized_image_bytes_io, file_extension = ImageStorage.compress_image(f'{ImageStorage().storage_root}/{image_name}', quality_map.get(quality))
     return StreamingResponse(resized_image_bytes_io, media_type=f"image/{file_extension}")
 
 @posts_router.get("/posts/user/{username}")

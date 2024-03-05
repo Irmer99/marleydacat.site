@@ -44,6 +44,12 @@ class TestPostApis(unittest.TestCase):
                 assert response.status_code == 200
                 response = session.get(f'{self.host}/post/image/{get_user_posts_response_json[i]["image_name"]}')
                 assert response.status_code == 200
+            # Test quality parameter image compression
+            response_low = session.get(f'{self.host}/post/image/{get_user_posts_response_json[i]["image_name"]}/?quality=low')
+            response_mid = session.get(f'{self.host}/post/image/{get_user_posts_response_json[i]["image_name"]}/?quality=mid')
+            assert len(response_low.content) < len(response_mid.content)
+            response_high = session.get(f'{self.host}/post/image/{get_user_posts_response_json[i]["image_name"]}/?quality=high')
+            assert len(response_mid.content) < len(response_high.content)
             # Get a random post
             response = session.get(f'{self.host}/post/random')
             assert response.status_code == 200
