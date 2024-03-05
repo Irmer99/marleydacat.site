@@ -10,4 +10,4 @@ pika
 websockets
 redis
 PyNaCl
-scikit-image
+Pillow

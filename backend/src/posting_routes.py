@@ -1,14 +1,13 @@
+import io
 import os
 import uuid
 import imghdr
 import logging
 import requests
-import numpy as np
-from io import BytesIO
 from pydantic import BaseModel
 from typing import Optional
 from fastapi import APIRouter
-from skimage import io, transform
+from PIL import Image
 from fastapi import FastAPI, Request, Depends, HTTPException, Response, Cookie, File, UploadFile, Form
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -34,30 +33,16 @@ class ImageStorage:
             local_file.write(await file.read())
         return img_id
 
-    def compress_image(image_path, max_dimension=480):
-        # Determine the image format (extension)
-        _, file_extension = os.path.splitext(image_path)
-        image_format = file_extension[1:].lower()
-        # Read the image from a file path
-        image = io.imread(image_path)
-        # Calculate new dimensions, preserving the aspect ratio
-        original_height, original_width = image.shape[:2]
-        aspect_ratio = original_width / original_height
-        if aspect_ratio > 1:
-            new_width = max_dimension
-            new_height = int(max_dimension / aspect_ratio)
-        else:
-            new_height = max_dimension
-            new_width = int(max_dimension * aspect_ratio)
-        # Resize the image
-        resized_image = transform.resize(image, (new_height, new_width), anti_aliasing=True)
-        resized_image_uint8 = (resized_image * 255).astype(np.uint8)
-        # Convert the numpy array (image) back to bytes
-        bytes_io = BytesIO()
-        io.imsave(bytes_io, resized_image_uint8, format=image_format)
-        bytes_io.seek(0)  # Go to the beginning of the BytesIO buffer
+    def compress_image(image_path, max_size=(480, 480)):
+        with Image.open(image_path) as img:
+            img.thumbnail(max_size)
+            # Convert the PIL image to bytes in the appropriate format
+            img_byte_arr = io.BytesIO()
+            format = img.format if img.format is not None else 'JPEG'  # Default to JPEG if format cannot be detected
+            img.save(img_byte_arr, format=format)
+            img_byte_arr.seek(0)  # Go to the start of the BytesIO object
 
-        return bytes_io, image_format
+            return img_byte_arr, format
 
 @posts_router.post("/post/create")
 async def create_post(session_id:str=Cookie(None), session_storage=Depends(get_sessions),
