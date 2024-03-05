@@ -7,7 +7,7 @@ import requests
 from pydantic import BaseModel
 from typing import Optional
 from fastapi import APIRouter
-from PIL import Image
+from PIL import Image, ImageOps
 from fastapi import FastAPI, Request, Depends, HTTPException, Response, Cookie, File, UploadFile, Form
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -35,6 +35,7 @@ class ImageStorage:
 
     def compress_image(image_path, max_size=(480, 480)):
         with Image.open(image_path) as img:
+            img = ImageOps.exif_transpose(img)
             img.thumbnail(max_size)
             # Convert the PIL image to bytes in the appropriate format
             img_byte_arr = io.BytesIO()
