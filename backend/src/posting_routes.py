@@ -105,7 +105,7 @@ async def get_image(image_name:str, quality:str=None, rds_client=Depends(get_db)
     if len(result) < 1:
         raise HTTPException(status_code=404)
     # get the file from the storage bucket and return it
-    resized_image_bytes_io, file_extension = ImageStorage.compress_image(f'{ImageStorage().storage_root}/{image_name}', quality_map.get(quality))
+    resized_image_bytes_io, file_extension = ImageStorage.compress_image(f'{ImageStorage().storage_root}/{image_name}', quality_map.get(quality, "mid"))
     return StreamingResponse(resized_image_bytes_io, media_type=f"image/{file_extension}")
 
 @posts_router.get("/posts/user/{username}")
