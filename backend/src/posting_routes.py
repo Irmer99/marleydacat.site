@@ -3,11 +3,14 @@ import uuid
 import imghdr
 import logging
 import requests
+import numpy as np
+from io import BytesIO
 from pydantic import BaseModel
 from typing import Optional
 from fastapi import APIRouter
+from skimage import io, transform
 from fastapi import FastAPI, Request, Depends, HTTPException, Response, Cookie, File, UploadFile, Form
-from fastapi.responses import FileResponse
+from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 
@@ -30,6 +33,31 @@ class ImageStorage:
         with open(f'{self.storage_root}/{img_id}.{filetype}', 'wb') as local_file:
             local_file.write(await file.read())
         return img_id
+
+    def compress_image(image_path, max_dimension=480):
+        # Determine the image format (extension)
+        _, file_extension = os.path.splitext(image_path)
+        image_format = file_extension[1:].lower()
+        # Read the image from a file path
+        image = io.imread(image_path)
+        # Calculate new dimensions, preserving the aspect ratio
+        original_height, original_width = image.shape[:2]
+        aspect_ratio = original_width / original_height
+        if aspect_ratio > 1:
+            new_width = max_dimension
+            new_height = int(max_dimension / aspect_ratio)
+        else:
+            new_height = max_dimension
+            new_width = int(max_dimension * aspect_ratio)
+        # Resize the image
+        resized_image = transform.resize(image, (new_height, new_width), anti_aliasing=True)
+        resized_image_uint8 = (resized_image * 255).astype(np.uint8)
+        # Convert the numpy array (image) back to bytes
+        bytes_io = BytesIO()
+        io.imsave(bytes_io, resized_image_uint8, format=image_format)
+        bytes_io.seek(0)  # Go to the beginning of the BytesIO buffer
+
+        return bytes_io, image_format
 
 @posts_router.post("/post/create")
 async def create_post(session_id:str=Cookie(None), session_storage=Depends(get_sessions),
@@ -90,8 +118,8 @@ async def get_image(image_name:str, rds_client=Depends(get_db)):
     if len(result) < 1:
         raise HTTPException(status_code=404)
     # get the file from the storage bucket and return it
-    file_extension = image_name.split(".")[-1]
-    return FileResponse(f'{ImageStorage().storage_root}/{image_name}', media_type=f"image/{file_extension}")
+    resized_image_bytes_io, file_extension = ImageStorage.compress_image(f'{ImageStorage().storage_root}/{image_name}')
+    return StreamingResponse(resized_image_bytes_io, media_type=f"image/{file_extension}")
 
 @posts_router.get("/posts/user/{username}")
 async def get_user_posts(username:str, sql_client=Depends(get_db)):
