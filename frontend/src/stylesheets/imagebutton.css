@@ -1,0 +1,13 @@
+.image-button {
+    height: 5vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .button-image {
+    max-height: 100%;
+    object-fit: cover;
+  }
